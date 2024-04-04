@@ -10,7 +10,6 @@ class MainScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('메인'),
       ),
-      drawer: const Drawer(),
       child: const Placeholder(),
     );
   }
