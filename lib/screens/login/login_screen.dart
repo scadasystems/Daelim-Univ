@@ -1,10 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:daelim_univ/common/app_assets.dart';
 import 'package:daelim_univ/common/widgets/app_icon_text_button.dart';
 import 'package:daelim_univ/common/widgets/app_scaffold.dart';
 import 'package:daelim_univ/router/app_router.dart';
 import 'package:daelim_univ/screens/login/widgets/login_text_field.dart';
+import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+
+// Log.green(jsonDecode(utf8.decode(response.bodyBytes)));
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -63,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               LoginTextField(
                 controller: pwController,
                 labelText: '비밀번호',
+                obscureText: true,
               ),
 
               const SizedBox(height: 100),
@@ -75,45 +84,63 @@ class _LoginScreenState extends State<LoginScreen> {
                   var email = emailController.text;
                   var password = pwController.text;
 
-                  /*
-                  curl -X POST 'https://121.140.73.79:18443/functions/v1/auth/signup' \
-                  -H 'Content-Type: application/json' \
-                  -d '{
-                      "email": "대림대 이메일",
-                      "password": "비밀번호",
-                      "name":"이름",
-                      "student_number": "학번"
-                  }'
-                  */
+                  // Future<int> testFuture() async {
+                  //   throw Exception('에러 발생');
+                  //   return 0;
+                  // }
 
-                  // var response = await http.post(
-                  //   Uri.parse(
-                  //     'http://121.140.73.79:18000/functions/v1/auth/signup',
-                  //   ),
-                  //   body: jsonEncode({
-                  //     'email': email,
-                  //     'password': password,
-                  //     'name': '모바일',
-                  //     'student_number': '2024510',
-                  //   }),
+                  // var value = await testFuture().catchError(
+                  //   (e, stackTrace) {
+                  //     Log.red('E: $e');
+                  //     Log.red('Stack: $stackTrace');
+                  //     return -1;
+                  //   },
                   // );
-                  // var status = response.statusCode;
-                  // var body = response.body;
-                  // if (status != 200) {
-                  //   return debugPrint('회원가입 에러: $status, $body');
-                  // }
-                  // debugPrint(body);
 
-                  // if (email != 'aaa' || password != '1234') {
-                  //   return;
-                  // }
+                  // Log.green('반환: $value');
 
-                  // 메인 화면 이동
-                  // context.go(AppScreen.main);
+                  var response = await http
+                      .post(
+                        Uri.parse(
+                          'http://121.140.73.79:60080/functions/v1/auth/login',
+                        ),
+                        body: jsonEncode({
+                          'email': email,
+                          'password': password,
+                        }),
+                      )
+                      .timeout(10.toSecond)
+                      .catchError((e, stackTrace) {
+                    Log.red('$e, $stackTrace');
+                    return http.Response('$e', 401);
+                  });
+
+                  var status = response.statusCode;
+                  var body = response.body;
+
+                  if (status != 200) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          '로그인을 실패했습니다. $status',
+                          style: const TextStyle(
+                            fontSize: 28,
+                          ),
+                        ),
+                      ),
+                    );
+
+                    return;
+                  }
+
+                  // 200 Success 처리
+                  Log.green(body);
+
+                  context.pushReplacement(AppScreen.main);
                 },
               ),
 
-              const SizedBox(height: 10),
+              10.heightBox,
 
               // 회원가입 버튼
               TextButton(

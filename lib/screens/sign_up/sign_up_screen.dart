@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:daelim_univ/common/widgets/app_icon_text_button.dart';
+import 'package:daelim_univ/router/app_router.dart';
 import 'package:daelim_univ/screens/login/widgets/login_text_field.dart';
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
 class SignUpScreen extends StatefulWidget {
@@ -58,6 +60,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pushReplacement(AppScreen.login);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -122,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 var response = await http.post(
                   Uri.parse(
-                    'http://175.197.109.158:60080/functions/v1/auth/signup',
+                    'http://121.140.73.79:60080/functions/v1/auth/signup',
                   ),
                   body: jsonEncode({
                     'email': email,
@@ -138,8 +148,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 if (status != 200) {
                   return Log.red('회원가입 에러: $status, $body');
                 }
-
-                Log.green(body);
               },
               text: '회원가입',
             ),
