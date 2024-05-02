@@ -1,8 +1,12 @@
+import 'package:daelim_univ/provider/auth_controller.dart';
 import 'package:daelim_univ/router/app_router.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
+  Get.put(AuthController());
+
   runApp(const MyApp());
 }
 
@@ -11,8 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: router,
+    return GetMaterialApp.router(
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      routeInformationProvider: router.routeInformationProvider,
       themeMode: debugBrightnessOverride == Brightness.dark //
           ? ThemeMode.dark
           : ThemeMode.light,

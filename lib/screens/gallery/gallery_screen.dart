@@ -44,8 +44,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           -H 'Content-Type: application/json' \
           -d '{
               "q": "검색어", 
-              "page": 페이지 수,                // Nullable, default: 1
-              "per_page": 페이지별 이미지 개수     // Nullable, default: 40
+              "page": 페이지 수,
+              "per_page": 페이지별 이미지 개수
           }'
           */
 
