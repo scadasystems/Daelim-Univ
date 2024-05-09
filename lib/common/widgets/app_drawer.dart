@@ -66,6 +66,12 @@ class AppDrawer extends StatelessWidget {
                 ),
                 _listTile(
                   context,
+                  path: AppScreen.lifecycle,
+                  icon: Icons.sync,
+                  title: '라이프사이클',
+                ),
+                _listTile(
+                  context,
                   path: AppScreen.gallery,
                   icon: Icons.image,
                   title: '갤러리',

@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:daelim_univ/common/widgets/app_scaffold.dart';
-import 'package:daelim_univ/models/gallery_item.dart';
-import 'package:easy_extension/easy_extension.dart';
+import 'package:daelim_univ/provider/gallery_controller.dart';
+import 'package:daelim_univ/router/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -14,95 +13,80 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
-  bool _isLoading = false;
-  GalleryItem? _galleryItem;
+  final _controller = Get.put(GalleryController());
+  late final ScrollController _scrollController;
 
-  void _showLoading() {
-    setState(() {
-      _galleryItem = null;
-      _isLoading = true;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _controller.fetchGallery();
   }
 
-  void _hideLoading() {
-    setState(() {
-      _isLoading = false;
-    });
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(
-        title: const Text('갤러리'),
-      ),
+      appBar: AppBar(title: const Text('갤러리')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // API 호출
-          /*
-          curl -X POST 'http://121.140.73.79:60080/functions/v1/gallery' \
-          -H 'Content-Type: application/json' \
-          -d '{
-              "q": "검색어", 
-              "page": 페이지 수,
-              "per_page": 페이지별 이미지 개수
-          }'
-          */
-
-          _showLoading();
-
-          var response = await http
-              .post(
-            Uri.parse(
-              'http://121.140.73.79:60080/functions/v1/gallery',
-            ),
-            body: jsonEncode({
-              'q': '새',
-            }),
-          )
-              .catchError((e) {
-            return http.Response('$e', 401);
-          });
-
-          var statusCode = response.statusCode;
-
-          _hideLoading();
-
-          if (statusCode != 200) {
-            Log.red('API 호출 실패');
-            return;
-          }
-
-          var body = jsonDecode(utf8.decode(response.bodyBytes));
-
-          setState(() {
-            _galleryItem = GalleryItem.fromMap(body);
-          });
-        },
+        onPressed: _controller.fetchGallery,
         child: const Icon(
           Icons.refresh,
         ),
       ),
-      child: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : GridView.builder(
-              itemCount: _galleryItem?.hits.length ?? 0,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
-              ),
-              itemBuilder: (context, index) {
-                var item = _galleryItem?.hits[index];
+      child: Obx(
+        () => _controller.rxGalleryItem.value == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Theme(
+                data: ThemeData(
+                  scrollbarTheme: const ScrollbarThemeData(
+                    thumbColor: MaterialStatePropertyAll(Colors.red),
+                  ),
+                ),
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true,
+                  child: GridView.builder(
+                    controller: _scrollController,
+                    itemCount: _controller.rxGalleryItem.value?.hits.length ?? 0,
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      var item = _controller.rxGalleryItem.value?.hits[index];
 
-                return Image.network(
-                  item?.webformatURL ?? '',
-                  fit: BoxFit.cover,
-                );
-              },
-            ),
+                      return GestureDetector(
+                        onTap: () {
+                          context.pushNamed(
+                            AppScreen.galleryDetail,
+                            pathParameters: {
+                              'id': (item?.id ?? -1).toString(),
+                            },
+                          );
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            item?.webformatURL ?? '',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+      ),
     );
   }
 }

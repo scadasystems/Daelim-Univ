@@ -6,6 +6,7 @@ class AppScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final PreferredSizeWidget? appBar;
   final Widget? bottomNavigationBar;
+  final bool enableDrawer;
   final Widget child;
 
   const AppScaffold({
@@ -13,6 +14,7 @@ class AppScaffold extends StatelessWidget {
     this.floatingActionButton,
     this.appBar,
     this.bottomNavigationBar,
+    this.enableDrawer = true,
     required this.child,
   });
 
@@ -20,7 +22,7 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      drawer: const AppDrawer(),
+      drawer: enableDrawer ? const AppDrawer() : null,
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(
