@@ -1,6 +1,8 @@
 import 'package:daelim_univ/provider/auth_controller.dart';
 import 'package:daelim_univ/router/app_router.dart';
+import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
@@ -27,6 +29,24 @@ class AppDrawer extends StatelessWidget {
       ),
     );
   }
+
+  List<Map<String, dynamic>> get _tilesData => [
+        {
+          'path': AppScreen.main,
+          'icon': Icons.home,
+          'title': '홈',
+        },
+        {
+          'path': AppScreen.lifecycle,
+          'icon': Icons.sync,
+          'title': '라이프사이클',
+        },
+        {
+          'path': AppScreen.gallery,
+          'icon': Icons.image,
+          'title': '갤러리',
+        }
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +77,14 @@ class AppDrawer extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              children: [
-                _listTile(
+              children: _tilesData.mapIndexed((i, e) {
+                return _listTile(
                   context,
-                  path: AppScreen.main,
-                  icon: Icons.home,
-                  title: '홈',
-                ),
-                _listTile(
-                  context,
-                  path: AppScreen.lifecycle,
-                  icon: Icons.sync,
-                  title: '라이프사이클',
-                ),
-                _listTile(
-                  context,
-                  path: AppScreen.gallery,
-                  icon: Icons.image,
-                  title: '갤러리',
-                ),
-              ],
+                  path: e['path'],
+                  icon: e['icon'],
+                  title: e['title'],
+                ).animate().slideX(delay: (i * 200).toMillisecond);
+              }).toList(),
             ),
           ),
         ],

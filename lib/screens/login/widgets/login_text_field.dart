@@ -29,7 +29,7 @@ class LoginTextField extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         style: const TextStyle(
-          fontSize: 40,
+          fontSize: 20,
         ),
         decoration: InputDecoration(
           border: const OutlineInputBorder(),

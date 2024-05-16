@@ -11,6 +11,9 @@ class GalleryController extends GetxController {
 
   Rxn<GalleryItem> rxGalleryItem = Rxn();
 
+  List<GalleryItemHits> get galleryItemHits => rxGalleryItem.value?.hits ?? [];
+
+  /// 갤러리 목록을 가져옵니다.
   void fetchGallery() async {
     rxGalleryItem.value = null;
 
@@ -40,5 +43,12 @@ class GalleryController extends GetxController {
     var body = jsonDecode(utf8.decode(response.bodyBytes));
 
     rxGalleryItem.value = GalleryItem.fromMap(body);
+  }
+
+  /// ID 를 사용하여 Hits 아이템에서 검색
+  ///
+  /// [id] : 검색할 ID
+  GalleryItemHits searchById(int id) {
+    return galleryItemHits.firstWhere((e) => e.id == id);
   }
 }

@@ -47,7 +47,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             : Theme(
                 data: ThemeData(
                   scrollbarTheme: const ScrollbarThemeData(
-                    thumbColor: MaterialStatePropertyAll(Colors.red),
+                    thumbColor: WidgetStatePropertyAll(Colors.red),
                   ),
                 ),
                 child: Scrollbar(
@@ -66,19 +66,31 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       var item = _controller.rxGalleryItem.value?.hits[index];
 
                       return GestureDetector(
-                        onTap: () {
-                          context.pushNamed(
-                            AppScreen.galleryDetail,
-                            pathParameters: {
-                              'id': (item?.id ?? -1).toString(),
-                            },
-                          );
+                        onTap: () async {
+                          if (item?.largeImageURL != null) {
+                            await precacheImage(
+                              Image.network(item!.largeImageURL).image,
+                              context,
+                            );
+                          }
+
+                          if (context.mounted) {
+                            context.pushNamed(
+                              AppScreen.galleryDetail,
+                              pathParameters: {
+                                'id': (item?.id ?? -1).toString(),
+                              },
+                            );
+                          }
                         },
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            item?.webformatURL ?? '',
-                            fit: BoxFit.cover,
+                          child: Hero(
+                            tag: item?.id ?? -1,
+                            child: Image.network(
+                              item?.webformatURL ?? '',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       );
