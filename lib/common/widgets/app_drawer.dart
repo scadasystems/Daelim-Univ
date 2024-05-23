@@ -87,6 +87,19 @@ class AppDrawer extends StatelessWidget {
               }).toList(),
             ),
           ),
+          const Divider(),
+          InkWell(
+            onTap: () => context.go(AppScreen.setting),
+            child: const ListTile(
+              title: Text(
+                '앱 설정',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+              trailing: Icon(Icons.arrow_right),
+            ),
+          ),
         ],
       ),
     );

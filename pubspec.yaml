@@ -5,20 +5,25 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: '>=3.4.1 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.6
+  day_night_themed_switch: ^1.0.0
   easy_extension:
     git:
       url: https://github.com/scadasystems/Easy-Extension.git
   flutter_animate: ^4.5.0
+  flex_color_scheme: ^7.3.1
   get: ^4.6.6
   go_router: ^13.2.1
   http:
+  shared_preferences: ^2.2.3
+
+
 
 dev_dependencies:
   flutter_test:
