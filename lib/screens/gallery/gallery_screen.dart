@@ -1,4 +1,5 @@
 import 'package:daelim_univ/common/widgets/app_scaffold.dart';
+import 'package:daelim_univ/localization/app_string.dart';
 import 'package:daelim_univ/provider/gallery_controller.dart';
 import 'package:daelim_univ/router/app_router.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(title: const Text('갤러리')),
+      appBar: AppBar(
+        title: Text(
+          AppString.gallery.tr,
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _controller.fetchGallery,
         child: const Icon(

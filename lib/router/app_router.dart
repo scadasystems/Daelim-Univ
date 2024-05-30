@@ -5,7 +5,6 @@ import 'package:daelim_univ/screens/login/login_screen.dart';
 import 'package:daelim_univ/screens/main/main_screen.dart';
 import 'package:daelim_univ/screens/setting/setting_screen.dart';
 import 'package:daelim_univ/screens/setting/subscreens/setting_locale_screen.dart';
-import 'package:daelim_univ/screens/setting/subscreens/setting_theme_screen.dart';
 import 'package:daelim_univ/screens/sign_up/sign_up_screen.dart';
 import 'package:easy_extension/easy_extension.dart';
 import 'package:go_router/go_router.dart';
@@ -59,11 +58,7 @@ final router = GoRouter(
       path: AppScreen.setting,
       builder: (context, state) => const SettingScreen(),
       routes: [
-        GoRoute(
-          path: AppScreen.settingTheme,
-          name: AppScreen.settingTheme,
-          builder: (context, state) => const SettingThemeScreen(),
-        ),
+        // 언어 변경
         GoRoute(
           path: AppScreen.settingLocale,
           name: AppScreen.settingLocale,
@@ -82,6 +77,5 @@ class AppScreen {
   static String gallery = '/gallery';
   static String galleryDetail = 'detail';
   static String setting = '/setting';
-  static String settingTheme = 'theme';
   static String settingLocale = 'locale';
 }

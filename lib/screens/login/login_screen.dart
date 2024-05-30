@@ -2,6 +2,7 @@
 import 'package:daelim_univ/common/app_assets.dart';
 import 'package:daelim_univ/common/widgets/app_icon_text_button.dart';
 import 'package:daelim_univ/common/widgets/app_scaffold.dart';
+import 'package:daelim_univ/localization/app_string.dart';
 import 'package:daelim_univ/provider/auth_controller.dart';
 import 'package:daelim_univ/router/app_router.dart';
 import 'package:daelim_univ/screens/login/widgets/login_text_field.dart';
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // 이메일 입력
               LoginTextField(
                 controller: emailController,
-                labelText: '이메일',
+                labelText: AppString.email.tr,
               ),
 
               30.heightBox,
@@ -100,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
               // 패스워드 입력
               LoginTextField(
                 controller: pwController,
-                labelText: '비밀번호',
+                labelText: AppString.password.tr,
                 obscureText: true,
               ),
 
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // 로그인 버튼
               AppIconTextButton(
-                text: '로그인',
+                text: '${AppString.login.tr}테스트',
                 icon: Icons.login,
                 onPressed: _signIn,
               ),
@@ -118,9 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
               // 회원가입 버튼
               TextButton(
                 onPressed: () => context.go(AppScreen.signUp),
-                child: const Text(
-                  '회원가입',
-                  style: TextStyle(
+                child: Text(
+                  AppString.signUp.tr,
+                  style: const TextStyle(
                     fontSize: 20,
                     color: Colors.black,
                   ),
